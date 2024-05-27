@@ -5,7 +5,6 @@
 #include <iomanip>
 #include <ctime>
 #include <vector>
-#include <string>
 using namespace std;
 
 struct Member
