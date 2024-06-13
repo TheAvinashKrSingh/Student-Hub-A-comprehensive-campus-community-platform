@@ -272,6 +272,9 @@ void Login::update_data_user()
         if (strcmp(user, temp.username) == 0)
         {
             cout << "Enter new credentials" << endl;
+            cout << "Password: Must at least contain one uppercase letter, one lowercase letter, one number, and one special character and no spaces.\n";
+            cout << "Branch: Must be the name of a valid branch (e.g., 'CSE', 'IT', etc).\n";
+            cout << "Not following the above format may result in your account termination by the admin!!!\n" << endl;
             cout << "\nNew Password  : ";
             cin >> temp.password;
             cout << "\nBranch    : ";
@@ -301,6 +304,11 @@ void Login::update_data_user()
 bool Login::_register()
 {
     int err;
+    cout << "Please follow the guidelines below for entering your credentials:\n";
+    cout << "Username: Must be alphanumeric and should be unique and not contain any spaces.\n";
+    cout << "Password: Must at least contain one uppercase letter, one lowercase letter, one number, and one special character and no spaces.\n";
+    cout << "Branch: Must be the name of a valid branch (e.g., 'CSE', 'IT', etc).\n";
+    cout << "Not following the above format may result in your account termination by the admin!!!\n" << endl;
     cout << "Username    : ";
     cin >> username;
     cout << "\nPassword  : ";
@@ -455,7 +463,7 @@ int Login::log_in()
 void Login::search_user()
 {
     char user[20];
-    cout << "Enter the user to be searched" << endl;
+    cout << "Enter the complete and exact username of the user to be searched" << endl;
     cin >> user;
     ifstream fin;
     fin.open("user_data.dat", ios::in | ios::binary);
