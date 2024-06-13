@@ -1,161 +1,25 @@
 #include <iostream>
-#include <fstream>
 #include <cstdlib>
 #include <cstring>
+#include <fstream>
 #include <ctime>
-#include <vector>
 using namespace std;
 
-struct Member
-{
-    string name;
-    string department;
-    string college;
-};
+void clear_screen();
 
 class Login
 {
 private:
     char username[20], password[20], branch[20], pno[20], email[30];
-
 public:
     Login();
-    int log_in();
-    bool _register();
-    void display();
-    void delete_user();
-    void main_menu();
-    void sub_menu1();
-    void sub_menu2();
-    void update_data_user();
-    void update_data_admin();
-    void search_user();
-    void read_news();
-    void write_news();
-    void schedule();
-    void edit_schedule();
-    void impt_con();
-    void edit_contacts();
-    void write_reviews();
-    void read_reviews();
+    int log_in(); bool _register(); void display(); void delete_user(); void main_menu();
+    void sub_menu1(); void sub_menu2(); void update_data_user(); void update_data_admin();
+    void search_user(); void read_news(); void write_news(); void schedule(); void edit_schedule();
+    void impt_con(); void edit_contacts(); void write_reviews(); void read_reviews();
 };
 
 Login l1, l2;
-
-void clear_screen();
-
-Login::Login()
-{
-    strcpy(username, "no data");
-    strcpy(password, "no data");
-    strcpy(branch, "no data");
-    strcpy(pno, "no data");
-    strcpy(email, "no data");
-}
-
-int Login::log_in()
-{
-    char user[20], pass[20];
-    cout << "Username : ";
-    cin >> user;
-    cout << "\nPassword : ";
-    cin >> pass;
-    clear_screen();
-    if (!(strcmp(user, "admin")) && !(strcmp(pass, "admin101")))
-        return 2;
-    else
-    {
-        ifstream fin;
-        fin.open("user_data.dat", ios::in | ios::binary);
-        fin.read((char *)this, sizeof(*this));
-        while (!fin.eof())
-        {
-            if (!(strcmp(user, username)) && !(strcmp(pass, password)))
-                return 1;
-            fin.read((char *)this, sizeof(*this));
-        }
-    }
-    return 10;
-}
-
-bool Login::_register()
-{
-    int err;
-    cout << "Username    : ";
-    cin >> username;
-    cout << "\nPassword  : ";
-    cin >> password;
-    cout << "\nBranch    : ";
-    cin >> branch;
-    cout << "\nPhone No. : ";
-    cin >> pno;
-    cout << "\nEmail     : ";
-    cin >> email;
-    try
-    {
-        if (!(strcmp(username, "no data")) || !(strcmp(password, "no data")))
-            throw err;
-        else
-        {
-            ofstream fout;
-            fout.open("user_data.dat", ios::app | ios::binary);
-            fout.write((char *)this, sizeof(*this));
-            fout.close();
-            clear_screen();
-            return true;
-        }
-    }
-    catch (int e)
-    {
-        cout << "Username or password cannot be blank" << endl;
-        return false;
-    }
-}
-
-void Login::display()
-{
-    int ctr = 0;
-    cout << "Currently registered users are: \n\n";
-    ifstream display;
-    display.open("user_data.dat", ios::in | ios::binary);
-    display.read((char *)this, sizeof(*this));
-    while (!display.eof())
-    {
-        cout << "\nName      : " << username;
-        cout << "\nBranch    : " << branch;
-        cout << "\nPhone No. : " << pno;
-        cout << "\nEmail     : " << email << endl
-             << endl;
-        display.read((char *)this, sizeof(*this));
-        ctr++;
-    }
-    cout << "Total registered users : ";
-    cout << "\033[1;31m" << ctr << "\033[0m\n\n";
-    display.close();
-}
-
-void Login::delete_user()
-{
-    char user[20];
-    cout << "Enter the user to be deleted" << endl;
-    cin >> user;
-    ifstream fin;
-    ofstream fout;
-    fin.open("user_data.dat", ios::in | ios::binary);
-    fout.open("temp.dat", ios::out | ios::binary);
-    fin.read((char *)this, sizeof(*this));
-    while (!fin.eof())
-    {
-        if (strcmp(user, username))
-            fout.write((char *)this, sizeof(*this));
-        fin.read((char *)this, sizeof(*this));
-    }
-    fin.close();
-    fout.close();
-    remove("user_data.dat");
-    rename("temp.dat", "user_data.dat");
-    cout << "User : " << user << " deleted successfully" << endl;
-}
 
 void Login::main_menu()
 {
@@ -434,6 +298,85 @@ void Login::update_data_user()
     file.close();
 }
 
+bool Login::_register()
+{
+    int err;
+    cout << "Username    : ";
+    cin >> username;
+    cout << "\nPassword  : ";
+    cin >> password;
+    cout << "\nBranch    : ";
+    cin >> branch;
+    cout << "\nPhone No. : ";
+    cin >> pno;
+    cout << "\nEmail     : ";
+    cin >> email;
+    try
+    {
+        if (!(strcmp(username, "no data")) || !(strcmp(password, "no data")))
+            throw err;
+        else
+        {
+            ofstream fout;
+            fout.open("user_data.dat", ios::app | ios::binary);
+            fout.write((char *)this, sizeof(*this));
+            fout.close();
+            clear_screen();
+            return true;
+        }
+    }
+    catch (int e)
+    {
+        cout << "Username or password cannot be blank" << endl;
+        return false;
+    }
+}
+
+void Login::display()
+{
+    int ctr = 0;
+    cout << "Currently registered users are: \n\n";
+    ifstream display;
+    display.open("user_data.dat", ios::in | ios::binary);
+    display.read((char *)this, sizeof(*this));
+    while (!display.eof())
+    {
+        cout << "\nName      : " << username;
+        cout << "\nBranch    : " << branch;
+        cout << "\nPhone No. : " << pno;
+        cout << "\nEmail     : " << email << endl
+             << endl;
+        display.read((char *)this, sizeof(*this));
+        ctr++;
+    }
+    cout << "Total registered users : ";
+    cout << "\033[1;31m" << ctr << "\033[0m\n\n";
+    display.close();
+}
+
+void Login::delete_user()
+{
+    char user[20];
+    cout << "Enter the user to be deleted" << endl;
+    cin >> user;
+    ifstream fin;
+    ofstream fout;
+    fin.open("user_data.dat", ios::in | ios::binary);
+    fout.open("temp.dat", ios::out | ios::binary);
+    fin.read((char *)this, sizeof(*this));
+    while (!fin.eof())
+    {
+        if (strcmp(user, username))
+            fout.write((char *)this, sizeof(*this));
+        fin.read((char *)this, sizeof(*this));
+    }
+    fin.close();
+    fout.close();
+    remove("user_data.dat");
+    rename("temp.dat", "user_data.dat");
+    cout << "User : " << user << " deleted successfully" << endl;
+}
+
 void Login::update_data_admin()
 {
     char user[20];
@@ -484,6 +427,31 @@ void Login::update_data_admin()
     file.close();
 }
 
+int Login::log_in()
+{
+    char user[20], pass[20];
+    cout << "Username : ";
+    cin >> user;
+    cout << "\nPassword : ";
+    cin >> pass;
+    clear_screen();
+    if (!(strcmp(user, "admin")) && !(strcmp(pass, "admin101")))
+        return 2;
+    else
+    {
+        ifstream fin;
+        fin.open("user_data.dat", ios::in | ios::binary);
+        fin.read((char *)this, sizeof(*this));
+        while (!fin.eof())
+        {
+            if (!(strcmp(user, username)) && !(strcmp(pass, password)))
+                return 1;
+            fin.read((char *)this, sizeof(*this));
+        }
+    }
+    return 10;
+}
+
 void Login::search_user()
 {
     char user[20];
@@ -530,7 +498,7 @@ void Login::edit_schedule()
     {
         if (ch == '.')
         {
-            break; 
+            break;
         }
         writes.put(ch);
     }
@@ -551,13 +519,13 @@ void Login::edit_contacts()
     readc.close();
 
     ofstream writec;
-    writec.open("contact.dat", ios::out | ios::trunc); 
+    writec.open("contact.dat", ios::out | ios::trunc);
     cout << "Enter the updated contacts. Enter '.' and press Enter when done:" << endl;
     while (cin.get(ch))
     {
         if (ch == '.')
         {
-            break; 
+            break;
         }
         writec.put(ch);
     }
@@ -658,9 +626,19 @@ void clear_screen()
     cout << "\033[2J\033[1;1H";
 }
 
+Login::Login()
+{
+    strcpy(username, "no data");
+    strcpy(password, "no data");
+    strcpy(branch, "no data");
+    strcpy(pno, "no data");
+    strcpy(email, "no data");
+}
+
 int main()
 {
-    cout << endl << "Team Name: Syntax Slaves" << endl;
+    cout << endl
+         << "Team Name: Syntax Slaves" << endl;
     cout << "Team Members:" << endl;
     cout << "1. Avinash Kumar Singh" << endl;
     cout << "2. Aman Raj" << endl;
