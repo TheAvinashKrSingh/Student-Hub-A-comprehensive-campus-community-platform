@@ -2,7 +2,6 @@
 #include <fstream>
 #include <cstdlib>
 #include <cstring>
-#include <iomanip>
 #include <ctime>
 #include <vector>
 using namespace std;
@@ -14,11 +13,6 @@ struct Member
     string college;
 };
 
-int calculatePadding(int screenWidth, int textWidth)
-{
-    return (screenWidth - textWidth) / 2;
-}
-
 class Login
 {
 private:
@@ -27,7 +21,7 @@ private:
 public:
     Login();
     int log_in();
-    bool regester();
+    bool _register();
     void display();
     void delete_user();
     void main_menu();
@@ -39,7 +33,9 @@ public:
     void read_news();
     void write_news();
     void schedule();
+    void edit_schedule();
     void impt_con();
+    void edit_contacts();
     void write_reviews();
     void read_reviews();
 };
@@ -82,7 +78,7 @@ int Login::log_in()
     return 10;
 }
 
-bool Login::regester()
+bool Login::_register()
 {
     int err;
     cout << "Username    : ";
@@ -180,7 +176,7 @@ void Login::main_menu()
         switch (ch)
         {
         case 1:
-            if (l1.regester())
+            if (l1._register())
             {
                 cout << "Registration successful - you may now login!" << endl;
                 cout << "\033[1;33mWELCOME TO THE COMMUNITY!\033[0m\n";
@@ -228,7 +224,9 @@ void Login::sub_menu2()
         cout << "2.Delete a user" << endl;
         cout << "3.Update a user's data" << endl;
         cout << "4.Read reviews from users" << endl;
-        cout << "5.Logout" << endl;
+        cout << "5.Edit Schedule" << endl;
+        cout << "6.Edit Contacts" << endl;
+        cout << "7.Logout" << endl;
         cout << "=======================================\n";
         cin >> ch;
         switch (ch)
@@ -263,6 +261,20 @@ void Login::sub_menu2()
             clear_screen();
             break;
         case 5:
+            l2.edit_schedule();
+            cout << "Press any key to continue..." << endl;
+            cin.ignore();
+            cin.get();
+            clear_screen();
+            break;
+        case 6:
+            l2.edit_contacts();
+            cout << "Press any key to continue..." << endl;
+            cin.ignore();
+            cin.get();
+            clear_screen();
+            break;
+        case 7:
             cout << "Logged out successfully" << endl;
             cout << "Press any key to continue..." << endl;
             cin.ignore();
@@ -274,7 +286,7 @@ void Login::sub_menu2()
             break;
         }
 
-    } while (ch != 5);
+    } while (ch != 7);
 }
 
 void Login::sub_menu1()
@@ -340,14 +352,14 @@ void Login::sub_menu1()
             cout << "Press any key to continue..." << endl;
             cin.ignore();
             cin.get();
-            clear_screen();
+            // clear_screen();
             break;
         case 6:
             l2.search_user();
             cout << "Press any key to continue..." << endl;
             cin.ignore();
             cin.get();
-            clear_screen();
+            // clear_screen();
             break;
         case 7:
             clear_screen();
@@ -498,6 +510,60 @@ void Login::search_user()
     fin.close();
 }
 
+void Login::edit_schedule()
+{
+    ifstream reads;
+    reads.open("schedule.dat", ios::in);
+    char ch;
+    cout << "Current Schedule:" << endl;
+    while (!reads.eof())
+    {
+        reads.get(ch);
+        cout << ch;
+    }
+    reads.close();
+
+    ofstream writes;
+    writes.open("schedule.dat", ios::out | ios::trunc);
+    cout << "Enter the updated schedule. Enter '.' and press Enter when done:" << endl;
+    while (cin.get(ch))
+    {
+        if (ch == '.')
+        {
+            break; 
+        }
+        writes.put(ch);
+    }
+    writes.close();
+}
+
+void Login::edit_contacts()
+{
+    ifstream readc;
+    readc.open("contact.dat", ios::in);
+    char ch;
+    cout << "Current Contacts:" << endl;
+    while (!readc.eof())
+    {
+        readc.get(ch);
+        cout << ch;
+    }
+    readc.close();
+
+    ofstream writec;
+    writec.open("contact.dat", ios::out | ios::trunc); 
+    cout << "Enter the updated contacts. Enter '.' and press Enter when done:" << endl;
+    while (cin.get(ch))
+    {
+        if (ch == '.')
+        {
+            break; 
+        }
+        writec.put(ch);
+    }
+    writec.close();
+}
+
 void Login::read_news()
 {
     ifstream readn;
@@ -594,46 +660,14 @@ void clear_screen()
 
 int main()
 {
-    string teamName = "Awesome Coders";
-    vector<Member> members = {
-        {"Avinash Kumar Singh", "B.Tech. (CSE)", "HNBGU"},
-        {"Aman Raj", "B.Tech. (CSE)", "HNBGU"},
-        {"Suhani Sharma", "B.Tech. (CSE)", "HNBGU"},
-        {"Shabnam Kumari", "B.Tech. (CSE)", "HNBGU"}};
-
-    // Calculate total width for centering
-    int screenWidth = 80; // Assuming terminal width is 80 characters
-    int teamNameWidth = teamName.length();
-    int memberInfoWidth = 0;
-    for (const auto &member : members)
-    {
-        int infoWidth = member.name.length() + member.college.length() + member.department.length() + 4; // 4 for separating spaces
-        if (infoWidth > memberInfoWidth)
-        {
-            memberInfoWidth = infoWidth;
-        }
-    }
-
-    int totalWidth = max(teamNameWidth, memberInfoWidth);
-
-    // Calculate padding for centering
-    int padding = calculatePadding(screenWidth, totalWidth);
-
-    // Print team name centered on the screen
-    cout << string(padding, ' ') << teamName << endl;
-
-    // Print member details centered on the screen
-    for (const auto &member : members)
-    {
-        int memberPadding = calculatePadding(screenWidth, member.name.length() + 2); // 2 for separating spaces
-        cout << string(memberPadding, ' ') << member.name << " - " << member.college << " - " << member.department << endl;
-    }
-
-    cout << string(padding, ' ') << "Our Team: " << teamName << endl;
-
-    cout << string(padding, ' ') << "Welcome to our mini project!" << endl;
+    cout << endl << "Team Name: Syntax Slaves" << endl;
+    cout << "Team Members:" << endl;
+    cout << "1. Avinash Kumar Singh" << endl;
+    cout << "2. Aman Raj" << endl;
+    cout << "3. Suhani Sharma" << endl;
+    cout << "4. Shabnam Kumari" << endl
+         << endl;
 
     l1.main_menu();
-
     return 0;
 }
